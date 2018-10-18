@@ -35,7 +35,6 @@ public class ProductDAOImpl implements ProductDAO {
             logger.error(e.getMessage(), e);
         }
 
-
         for (Category cat : product.getCategories()) {
 
             long category_id = createCategory(cat);
