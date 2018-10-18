@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface ProductDAO {
 
-    public void create(Product product) throws SQLException;
+    public long create(Product product);
 
     public void update(Product product);
 
-    public List<Product> getAll() throws SQLException;
+    public List<Product> getAll();
 
-    public void deleteAll() throws SQLException;
+    public void deleteAll();
 
 }

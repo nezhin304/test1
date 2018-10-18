@@ -13,9 +13,10 @@ public class CategoryDAOImpl implements CategoryDAO {
     Logger logger = LoggerFactory.getLogger(CategoryDAOImpl.class);
 
     @Override
-    public void create(Category category) {
+    public long create(Category category) {
 
         PreparedStatement statement = null;
+        long category_id = 0;
 
         try (Connection connection = Pool.getConnection()) {
 
@@ -26,14 +27,13 @@ public class CategoryDAOImpl implements CategoryDAO {
             ResultSet resultSet = statement.getGeneratedKeys();
             connection.commit();
             resultSet.next();
-            long category_id = resultSet.getLong(1);
-            logger.info(String.valueOf(category_id));
+            category_id = resultSet.getLong(1);
 
         } catch (SQLException e) {
 
             if (e.getMessage().indexOf("duplicate key value") != -1) {
 
-                getId(category);
+                category_id = getId(category);
 
             } else {
                 logger.error(e.getMessage());
@@ -44,10 +44,11 @@ public class CategoryDAOImpl implements CategoryDAO {
             try {
                 statement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
 
+        return category_id;
     }
 
     @Override
@@ -89,7 +90,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             try {
                 statement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
             return category_id;

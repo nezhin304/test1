@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CategoryDAO {
 
-    public void create(Category category);
+    public long create(Category category);
 
     public void update(Category category);
 

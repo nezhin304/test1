@@ -13,9 +13,10 @@ public class ProductDAOImpl implements ProductDAO {
     private Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
 
     @Override
-    public void create(Product product) {
+    public long create(Product product) {
 
         PreparedStatement statement = null;
+        long product_id = 0;
 
         try (Connection connection = Pool.getConnection()) {
 
@@ -27,8 +28,7 @@ public class ProductDAOImpl implements ProductDAO {
             ResultSet resultSet = statement.getGeneratedKeys();
             connection.commit();
             resultSet.next();
-            long product_id = resultSet.getLong(1);
-            logger.info(String.valueOf(product_id));
+            product_id = resultSet.getLong(1);
 
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
@@ -40,6 +40,8 @@ public class ProductDAOImpl implements ProductDAO {
                 e.printStackTrace();
             }
         }
+
+        return product_id;
     }
 
     @Override
@@ -48,12 +50,12 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAll() throws SQLException {
+    public List<Product> getAll(){
         return null;
     }
 
     @Override
-    public void deleteAll() throws SQLException {
+    public void deleteAll() {
 
     }
 }

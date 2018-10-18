@@ -28,23 +28,17 @@ public class ProductDAOImplTest {
 
         Category category1 = new Category();
         category1.setName("sport");
-        category1.setProduct(product);
-        product.setCategory(category1);
 
-//        ProductDAOImpl productDAO = new ProductDAOImpl();
-//        productDAO.create(product);
+        ProductDAOImpl productDAO = new ProductDAOImpl();
         CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
-        categoryDAO.create(category);
 
-        logger.info(product.getName());
-        logger.info(product.getCode());
+        long product_id = productDAO.create(product);
+        long category_id = categoryDAO.create(category);
 
-        List<Category> categories = product.getCategories();
+        RelationDAOImpl relationDAO = new RelationDAOImpl();
+        relationDAO.create(product_id, category_id);
 
-        for (Category cat: categories) {
 
-            logger.info(cat.getName());
-        }
 
 
     }
