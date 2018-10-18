@@ -1,5 +1,6 @@
 package com.shop.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
@@ -8,7 +9,7 @@ public class Product {
 
     private  String code;
 
-    private List<Category> categories;
+    private List<Category> categories = new ArrayList<>();
 
     /*----------------------------------*/
 
@@ -34,6 +35,10 @@ public class Product {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public void setCategory(Category category){
+        categories.add(category);
     }
 
 }

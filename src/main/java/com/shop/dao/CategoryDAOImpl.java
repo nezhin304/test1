@@ -1,12 +1,52 @@
 package com.shop.dao;
 
 import com.shop.entity.Category;
+import com.shop.pool.Pool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.*;
 import java.util.List;
 
 public class CategoryDAOImpl implements CategoryDAO {
+
+    Logger logger = LoggerFactory.getLogger(CategoryDAOImpl.class);
+
     @Override
     public void create(Category category) {
+
+        PreparedStatement statement = null;
+
+        try (Connection connection = Pool.getConnection()) {
+
+            statement = connection.
+                    prepareStatement("INSERT INTO categories (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, category.getName());
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            connection.commit();
+            resultSet.next();
+            long category_id = resultSet.getLong(1);
+            logger.info(String.valueOf(category_id));
+
+        } catch (SQLException e) {
+
+            if (e.getMessage().indexOf("duplicate key value") != -1) {
+
+                getId(category);
+
+            } else {
+                logger.error(e.getMessage());
+            }
+
+        } finally {
+
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -23,5 +63,36 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Override
     public void deleteAll() {
 
+    }
+
+    private long getId(Category category) {
+
+        PreparedStatement statement = null;
+        long category_id = 0;
+
+        try (Connection connection = Pool.getConnection()) {
+
+            statement = connection.
+                    prepareStatement("SELECT MAX(category_id) FROM categories WHERE name = ?");
+            statement.setString(1, category.getName());
+            ResultSet resultSet = statement.executeQuery();
+            connection.commit();
+            resultSet.next();
+            category_id = resultSet.getLong(1);
+
+        } catch (SQLException e) {
+
+            logger.info(e.getMessage());
+
+        } finally {
+
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return category_id;
+        }
     }
 }
