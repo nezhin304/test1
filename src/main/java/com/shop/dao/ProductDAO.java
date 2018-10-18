@@ -16,8 +16,4 @@ public interface ProductDAO {
 
     public void deleteAll() throws SQLException;
 
-    public long createCategory(Category category) throws SQLException;
-
-    public void linkProductCategory(long product_id, long category_id) throws SQLException;
-
 }
