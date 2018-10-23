@@ -29,11 +29,8 @@ public class RelationDAOImpl implements RelationDAO{
         } catch (SQLException e) {
             logger.error(e.getMessage());
         } finally {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
+
+            Helper.closeStatementResultSet(statement, null);
         }
 
     }

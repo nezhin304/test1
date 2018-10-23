@@ -37,7 +37,7 @@ public class Product {
         this.categories = categories;
     }
 
-    public void setCategory(Category category){
+    public void setCategories(Category category){
         categories.add(category);
     }
 

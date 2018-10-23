@@ -15,38 +15,41 @@ public class ProductDAOImplTest {
     @Test
     public void create() {
 
+        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+        ProductDAOImpl productDAO = new ProductDAOImpl();
+        OrderDAOImpl orderDAO = new OrderDAOImpl();
+
         Product product = new Product();
         product.setName("bike");
-        product.setCode("0003");
+        product.setCode("00003");
 
         Category category = new Category();
         category.setName("default");
-        category.setProducts(product);
-        product.setCategory(category);
+        product.setCategories(category);
+
+        productDAO.create(product);
+
+        Product product1 = new Product();
+        product1.setName("ball");
+        product1.setCode("00005");
+
+        Category category1 = new Category();
+        category1.setName("outdor");
+        product1.setCategories(category1);
+
+        productDAO.create(product1);
 
         Customer customer = new Customer();
-        customer.setName("User1");
+        customer.setName("User");
+
+        customerDAO.create(customer);
 
         Order order = new Order();
         order.setCustomer(customer);
         order.setProducts(product);
+        order.setProducts(product1);
 
-        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
-        customerDAO.create(customer);
-
-        ProductDAOImpl productDAO = new ProductDAOImpl();
-        CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
-
-        long product_id = productDAO.create(product);
-        long category_id = categoryDAO.create(category);
-
-        RelationDAOImpl relationDAO = new RelationDAOImpl();
-        relationDAO.create(product_id, category_id);
-
-        OrderDAOImpl orderDAO = new OrderDAOImpl();
         orderDAO.create(order);
 
     }
-
-
 }

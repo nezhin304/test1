@@ -13,19 +13,45 @@ public class ProductDAOImpl implements ProductDAO {
     private Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
 
     @Override
-    public long create(Product product) {
+    public void create(Product product) {
+
+        CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
+        PreparedStatement statement = null;
+
+        try (Connection connection = Pool.getConnection()) {
+
+            statement = connection.
+                    prepareStatement("INSERT INTO products (name, code) VALUES (?,?)");
+            statement.setString(1, product.getName());
+            statement.setString(2, product.getCode());
+            statement.executeUpdate();
+            connection.commit();
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+
+            Helper.closeStatementResultSet(statement, null);
+        }
+
+
+        categoryDAO.create(product);
+
+    }
+
+    @Override
+    public long getId(Product product) {
 
         PreparedStatement statement = null;
+        ResultSet resultSet = null;
         long product_id = 0;
 
         try (Connection connection = Pool.getConnection()) {
 
             statement = connection.
-                    prepareStatement("INSERT INTO products (name, code) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, product.getName());
-            statement.setString(2, product.getCode());
-            statement.executeUpdate();
-            ResultSet resultSet = statement.getGeneratedKeys();
+                    prepareStatement("SELECT MAX(product_id) FROM products WHERE code = ?");
+            statement.setString(1, product.getCode());
+            resultSet = statement.executeQuery();
             connection.commit();
             resultSet.next();
             product_id = resultSet.getLong(1);
@@ -34,11 +60,7 @@ public class ProductDAOImpl implements ProductDAO {
             logger.error(e.getMessage(), e);
         } finally {
 
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            Helper.closeStatementResultSet(statement, resultSet);
         }
 
         return product_id;
@@ -50,7 +72,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAll(){
+    public List<Product> getAll() {
         return null;
     }
 

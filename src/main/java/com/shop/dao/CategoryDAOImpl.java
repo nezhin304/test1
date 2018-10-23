@@ -1,6 +1,7 @@
 package com.shop.dao;
 
 import com.shop.entity.Category;
+import com.shop.entity.Product;
 import com.shop.pool.Pool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,43 +14,52 @@ public class CategoryDAOImpl implements CategoryDAO {
     Logger logger = LoggerFactory.getLogger(CategoryDAOImpl.class);
 
     @Override
-    public long create(Category category) {
+    public void create(Product product) {
 
+        RelationDAOImpl relationDAO = new RelationDAOImpl();
+        ProductDAOImpl productDAO = new ProductDAOImpl();
+        long product_id = productDAO.getId(product);
         PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
         long category_id = 0;
 
-        try (Connection connection = Pool.getConnection()) {
 
-            statement = connection.
-                    prepareStatement("INSERT INTO categories (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, category.getName());
-            statement.executeUpdate();
-            ResultSet resultSet = statement.getGeneratedKeys();
-            connection.commit();
-            resultSet.next();
-            category_id = resultSet.getLong(1);
+        for (Category category : product.getCategories()) {
 
-        } catch (SQLException e) {
+            try (Connection connection = Pool.getConnection()) {
 
-            if (e.getMessage().indexOf("duplicate key value") != -1) {
+                statement = connection.
+                        prepareStatement("INSERT INTO categories (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+                statement.setString(1, category.getName());
+                statement.executeUpdate();
+                resultSet = statement.getGeneratedKeys();
+                connection.commit();
+                resultSet.next();
+                category_id = resultSet.getLong(1);
 
-                category_id = getId(category);
+                relationDAO.create(product_id, category_id);
 
-            } else {
-                logger.error(e.getMessage());
-            }
-
-        } finally {
-
-            try {
-                statement.close();
             } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
-        }
 
-        return category_id;
+                if (e.getMessage().contains("duplicate key value")) {
+
+                    category_id = getId(category);
+
+                } else {
+                    logger.error(e.getMessage());
+                }
+            } finally
+
+            {
+
+                Helper.closeStatementResultSet(statement, resultSet);
+
+            }
+
+        }
     }
+
 
     @Override
     public void update(Category category) {
@@ -69,6 +79,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     private long getId(Category category) {
 
         PreparedStatement statement = null;
+        ResultSet resultSet = null;
         long category_id = 0;
 
         try (Connection connection = Pool.getConnection()) {
@@ -76,7 +87,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             statement = connection.
                     prepareStatement("SELECT MAX(category_id) FROM categories WHERE name = ?");
             statement.setString(1, category.getName());
-            ResultSet resultSet = statement.executeQuery();
+            resultSet = statement.executeQuery();
             connection.commit();
             resultSet.next();
             category_id = resultSet.getLong(1);
@@ -87,13 +98,9 @@ public class CategoryDAOImpl implements CategoryDAO {
 
         } finally {
 
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
-
-            return category_id;
+            Helper.closeStatementResultSet(statement, resultSet);
         }
+        return category_id;
     }
+
 }

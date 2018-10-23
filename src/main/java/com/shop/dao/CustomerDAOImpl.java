@@ -29,13 +29,8 @@ public class CustomerDAOImpl implements CustomerDAO {
         } catch (SQLException e) {
             logger.error(e.getMessage());
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
+
+            Helper.closeStatementResultSet(statement, null);
         }
     }
 
@@ -59,17 +54,8 @@ public class CustomerDAOImpl implements CustomerDAO {
         } catch (SQLException e) {
             logger.error(e.getMessage());
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
 
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
+            Helper.closeStatementResultSet(statement, resultSet);
         }
 
         return id;

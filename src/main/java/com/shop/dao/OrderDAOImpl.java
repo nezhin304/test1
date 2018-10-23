@@ -38,13 +38,8 @@ public class OrderDAOImpl implements OrderDAO {
         } catch (SQLException e) {
             logger.error(e.getMessage());
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    logger.error(e.getMessage());
-                }
-            }
+
+            Helper.closeStatementResultSet(statement, null);
         }
     }
 }
