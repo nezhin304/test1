@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="local_git_repositories" uploadOnCheckin="ed0fe7c2-c2b7-4426-b260-72824c610510">
+    <serverData>
+      <paths name="local_git_repositories">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$/src/test" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myUploadOnCheckinName" value="local_git_repositories" />
+  </component>
+</project>
