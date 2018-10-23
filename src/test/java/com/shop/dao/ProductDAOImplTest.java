@@ -2,6 +2,7 @@ package com.shop.dao;
 
 import com.shop.entity.Category;
 import com.shop.entity.Customer;
+import com.shop.entity.Order;
 import com.shop.entity.Product;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -20,8 +21,18 @@ public class ProductDAOImplTest {
 
         Category category = new Category();
         category.setName("default");
-        category.setProduct(product);
+        category.setProducts(product);
         product.setCategory(category);
+
+        Customer customer = new Customer();
+        customer.setName("User1");
+
+        Order order = new Order();
+        order.setCustomer(customer);
+        order.setProducts(product);
+
+        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+        customerDAO.create(customer);
 
         ProductDAOImpl productDAO = new ProductDAOImpl();
         CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
@@ -32,17 +43,8 @@ public class ProductDAOImplTest {
         RelationDAOImpl relationDAO = new RelationDAOImpl();
         relationDAO.create(product_id, category_id);
 
-
-
-
-
-
-//        Customer customer = new Customer();
-//        customer.setName("User1");
-//
-//        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
-//
-//        customerDAO.create(customer);
+        OrderDAOImpl orderDAO = new OrderDAOImpl();
+        orderDAO.create(order);
 
     }
 

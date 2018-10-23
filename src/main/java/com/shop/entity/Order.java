@@ -3,20 +3,19 @@ package com.shop.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Category {
+public class Order {
 
-    private String name;
+    private Customer customer;
 
     private List<Product> products = new ArrayList<>();
 
-    /*-------------------------------*/
 
-    public String getName() {
-        return name;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public List<Product> getProducts() {
@@ -27,8 +26,7 @@ public class Category {
         this.products = products;
     }
 
-    public void setProducts(Product product){
+    public void setProducts(Product product) {
         products.add(product);
     }
-
 }

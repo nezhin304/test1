@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Objects;
 
 public class CustomerDAOImpl implements CustomerDAO {
 
@@ -37,7 +37,41 @@ public class CustomerDAOImpl implements CustomerDAO {
                 logger.error(e.getMessage());
             }
         }
+    }
 
+    @Override
+    public long getId(Customer customer) {
 
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        long id = 0;
+
+        try (Connection connection = Pool.getConnection()) {
+
+            statement = connection.prepareStatement("SELECT customer_id FROM customers WHERE name = ?");
+            statement.setString(1, customer.getName());
+            resultSet = statement.executeQuery();
+            connection.commit();
+
+            resultSet.next();
+            id = resultSet.getLong(1);
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+
+        return id;
     }
 }
