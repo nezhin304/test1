@@ -3,6 +3,9 @@ package com.shop.dao;
 import com.shop.entity.Customer;
 import com.shop.entity.Order;
 import com.shop.entity.Product;
+import com.shop.instance.CustomerDAOInstance;
+import com.shop.instance.OrderDAOInstance;
+import com.shop.instance.ProductDAOInstance;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,25 +17,24 @@ public class ProductDAOImplTest {
     @Test
     public void create() {
 
-       Product product = new Product();
-       product.setName("ball");
-       product.setCode("0000005");
-       product.setCategories("default");
-       product.setCategories("outdor");
+        CustomerDAOImpl customerDAO = CustomerDAOInstance.getInstance();
+        OrderDAOImpl orderDAO = OrderDAOInstance.getInstance();
+        ProductDAOImpl productDAO = ProductDAOInstance.getInstance();
 
-//       ProductDAOImpl productDAO = new ProductDAOImpl();
-//       productDAO.save(product);
+        Product product = new Product();
+        product.setName("ball");
+        product.setCode("0000005");
+        product.setCategories("default");
+        product.setCategories("outdor");
+        productDAO.save(product);
 
         Customer customer = new Customer();
         customer.setName("User");
-//        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
-//        customerDAO.create(customer);
+        customerDAO.create(customer);
 
         Order order = new Order();
         order.setProducts(product);
         order.setCustomer(customer);
-
-        OrderDAOImpl orderDAO = new OrderDAOImpl();
         orderDAO.create(order);
 
 
