@@ -6,14 +6,14 @@ import java.util.List;
 
 public interface ProductDAO {
 
-    void create(Product product);
+    void save(Product product);
 
-    long getId(Product product);
+    void delete(Product product);
 
-    void update(Product product);
+    long getById(long id);
+
+    List<Product> getByCategory(String category);
 
     List<Product> getAll();
-
-    void deleteAll();
 
 }

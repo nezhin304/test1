@@ -1,6 +1,5 @@
 package com.shop.dao;
 
-import com.shop.entity.Category;
 import com.shop.entity.Customer;
 import com.shop.entity.Order;
 import com.shop.entity.Product;
@@ -15,41 +14,27 @@ public class ProductDAOImplTest {
     @Test
     public void create() {
 
-        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
-        ProductDAOImpl productDAO = new ProductDAOImpl();
-        OrderDAOImpl orderDAO = new OrderDAOImpl();
+       Product product = new Product();
+       product.setName("ball");
+       product.setCode("0000005");
+       product.setCategories("default");
+       product.setCategories("outdor");
 
-        Product product = new Product();
-        product.setName("bike");
-        product.setCode("00003");
-
-        Category category = new Category();
-        category.setName("default");
-        product.setCategories(category);
-
-        productDAO.create(product);
-
-        Product product1 = new Product();
-        product1.setName("ball");
-        product1.setCode("00005");
-
-        Category category1 = new Category();
-        category1.setName("outdor");
-        product1.setCategories(category1);
-
-        productDAO.create(product1);
+//       ProductDAOImpl productDAO = new ProductDAOImpl();
+//       productDAO.save(product);
 
         Customer customer = new Customer();
         customer.setName("User");
-
-        customerDAO.create(customer);
+//        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+//        customerDAO.create(customer);
 
         Order order = new Order();
-        order.setCustomer(customer);
         order.setProducts(product);
-        order.setProducts(product1);
+        order.setCustomer(customer);
 
+        OrderDAOImpl orderDAO = new OrderDAOImpl();
         orderDAO.create(order);
+
 
     }
 }

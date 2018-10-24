@@ -7,11 +7,9 @@ public class Product {
 
     private String name;
 
-    private  String code;
+    private String code;
 
-    private List<Category> categories = new ArrayList<>();
-
-    /*----------------------------------*/
+    private List<String> categories = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -29,15 +27,15 @@ public class Product {
         this.code = code;
     }
 
-    public List<Category> getCategories() {
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
 
-    public void setCategories(Category category){
+    public void setCategories(String category) {
         categories.add(category);
     }
 

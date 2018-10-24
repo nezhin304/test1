@@ -22,7 +22,6 @@ public class OrderDAOImpl implements OrderDAO {
 
         PreparedStatement statement = null;
 
-
         try (Connection connection = Pool.getConnection()) {
 
             for (Product product : order.getProducts()) {
