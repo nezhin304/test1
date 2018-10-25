@@ -17,9 +17,9 @@ public class ProductDAOImplTest {
     @Test
     public void create() {
 
-        CustomerDAOImpl customerDAO = CustomerDAOInstance.getInstance();
-        OrderDAOImpl orderDAO = OrderDAOInstance.getInstance();
-        ProductDAOImpl productDAO = ProductDAOInstance.getInstance();
+        CustomerDAO customerDAO = CustomerDAOInstance.getInstance();
+        OrderDAO orderDAO = OrderDAOInstance.getInstance();
+        ProductDAO productDAO = ProductDAOInstance.getInstance();
 
         Product product = new Product();
         product.setName("ball");
