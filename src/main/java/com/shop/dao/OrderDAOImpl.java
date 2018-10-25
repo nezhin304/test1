@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
 
@@ -18,12 +19,12 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
 
         CustomerDAOImpl customerDAO = new CustomerDAOImpl();
         long customer_id = customerDAO.getId(order.getCustomer());
-
         PreparedStatement statement = null;
+        ArrayList<Product> products = new ArrayList<>(order.getProducts());
 
         try (Connection connection = getConnection()) {
 
-            for (Product product : order.getProducts()) {
+            for (Product product : products) {
 
                 statement = connection.prepareStatement("INSERT INTO orders (customer_id, product_code) VALUES (?,?)");
                 statement.setLong(1, customer_id);

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
@@ -17,6 +18,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 
         PreparedStatement statement = null;
         ResultSet resultSet;
+        ArrayList<String> categories = new ArrayList<>(product.getCategories());
         long productId = 0;
 
         try (Connection connection = getConnection()) {
@@ -38,7 +40,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
             Helper.closeStatementResultSet(statement, null);
         }
 
-        for (String category : product.getCategories()) {
+        for (String category : categories) {
 
             long categoryId = saveCategory(category);
 
