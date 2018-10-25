@@ -22,7 +22,7 @@ public class ProductDAOImplTest {
     Logger logger = LoggerFactory.getLogger(ProductDAOImplTest.class);
 
     @Test
-    public void create() {
+    public void insertAndSelectEntityTest() {
 
         CustomerDAO customerDAO = CustomerDAOInstance.getInstance();
         OrderDAO orderDAO = OrderDAOInstance.getInstance();
