@@ -11,5 +11,5 @@ public interface CustomerDAO {
 
     long getId (Customer customer);
 
-    Collection getAll();
+    Collection<Customer> getAll();
 }

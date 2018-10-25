@@ -63,11 +63,11 @@ public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
     }
 
     @Override
-    public Collection getAll() {
+    public Collection<Customer> getAll() {
 
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        Collection customers = new ArrayList<Customer>();
+        Collection customers = new ArrayList<>();
 
         try (Connection connection = getConnection()) {
 
@@ -79,7 +79,7 @@ public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
 
                 Customer customer = new Customer();
                 customer.setName(resultSet.getString(2));
-                ((ArrayList) customers).add(customer);
+                customers.add(customer);
             }
 
         } catch (SQLException e) {

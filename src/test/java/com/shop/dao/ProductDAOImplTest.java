@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
@@ -43,9 +42,9 @@ public class ProductDAOImplTest {
         order.setCustomer(customer);
         orderDAO.create(order);
 
-        ArrayList<Product> products = (ArrayList<Product>)productDAO.getAll();
+        Collection products = productDAO.getAll();
 
-        Product productRes = products.stream()
+        Product productRes = ((ArrayList<Product>)products).stream()
                 .filter(p -> p.getName().equals("ball"))
                 .findFirst()
                 .get();
@@ -53,13 +52,15 @@ public class ProductDAOImplTest {
         assertEquals("ball", productRes.getName());
         assertEquals("0000005", productRes.getCode());
 
-        List<String> cat = (List<String>) productRes.getCategories();
+
+        Collection cat = productRes.getCategories();
 
         assertTrue(cat.contains("default"));
 
-        ArrayList<Customer> customers = (ArrayList<Customer>) customerDAO.getAll();
 
-        Customer customerRes = customers.stream()
+        Collection customers = customerDAO.getAll();
+
+        Customer customerRes = ((ArrayList<Customer>)customers).stream()
                 .filter(c -> c.getName().equals("User"))
                 .findFirst()
                 .get();
