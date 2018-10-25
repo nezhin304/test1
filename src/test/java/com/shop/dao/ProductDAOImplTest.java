@@ -10,6 +10,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.TestCase.assertEquals;
+
 public class ProductDAOImplTest {
 
     Logger logger = LoggerFactory.getLogger(ProductDAOImplTest.class);
@@ -25,7 +32,6 @@ public class ProductDAOImplTest {
         product.setName("ball");
         product.setCode("0000005");
         product.setCategories("default");
-        product.setCategories("outdor");
         productDAO.save(product);
 
         Customer customer = new Customer();
@@ -37,6 +43,29 @@ public class ProductDAOImplTest {
         order.setCustomer(customer);
         orderDAO.create(order);
 
+        ArrayList<Product> products = (ArrayList<Product>)productDAO.getAll();
+
+        Product productRes = products.stream()
+                .filter(p -> p.getName().equals("ball"))
+                .findFirst()
+                .get();
+
+        assertEquals("ball", productRes.getName());
+        assertEquals("0000005", productRes.getCode());
+        assertEquals("0000005", productRes.getCode());
+
+        List<String> cat = (List<String>) productRes.getCategories();
+
+        assertTrue(cat.contains("default"));
+
+        ArrayList<Customer> customers = (ArrayList<Customer>) customerDAO.getAll();
+
+        Customer customerRes = customers.stream()
+                .filter(c -> c.getName().equals("User"))
+                .findFirst()
+                .get();
+
+        assertEquals("User", customerRes.getName());
 
     }
 }

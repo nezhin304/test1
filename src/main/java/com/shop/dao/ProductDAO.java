@@ -2,6 +2,7 @@ package com.shop.dao;
 
 import com.shop.entity.Product;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ProductDAO {
@@ -12,8 +13,10 @@ public interface ProductDAO {
 
     long getById(long id);
 
-    List<Product> getByCategory(String category);
+    Collection getByCategory(String category);
 
-    List<Product> getAll();
+    Collection getCategories(Product product);
+
+    Collection getAll();
 
 }

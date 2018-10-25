@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
@@ -18,7 +19,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 
         PreparedStatement statement = null;
         ResultSet resultSet;
-        ArrayList<String> categories = new ArrayList<>(product.getCategories());
+        Collection categories =  product.getCategories();
         long productId = 0;
 
         try (Connection connection = getConnection()) {
@@ -40,7 +41,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
             Helper.closeStatementResultSet(statement, null);
         }
 
-        for (String category : categories) {
+        for (String category : (ArrayList<String>) categories) {
 
             long categoryId = saveCategory(category);
 
@@ -76,8 +77,62 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAll() {
-        return null;
+    public Collection getCategories(Product product) {
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Collection list = new ArrayList<String>();
+
+        try (Connection connection = getConnection()){
+
+            statement = connection.prepareStatement("select name from categories where category_id = (select category_id from products_categories where product_id = (select product_id from products where name = ?));");
+            statement.setString(1, product.getName());
+            resultSet = statement.executeQuery();
+            connection.commit();
+            while (resultSet.next()){
+
+                list.add(resultSet.getString(1));
+
+            }
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, resultSet);
+        }
+
+        return list;
+    }
+
+    @Override
+    public Collection getAll() {
+
+        PreparedStatement statement = null;
+        Collection list = new ArrayList();
+        ResultSet resultSet = null;
+
+
+        try (Connection connection = getConnection()){
+
+            statement = connection.prepareStatement("SELECT p.*, c.* FROM products p JOIN products_categories p_c ON p.product_id = p_c.product_id \n" +
+                    "JOIN categories c ON c.category_id = p_c.category_id");
+            resultSet = statement.executeQuery();
+            connection.commit();
+            while (resultSet.next()){
+                Product product = new Product();
+                product.setName(resultSet.getString(2));
+                product.setCode(resultSet.getString(3));
+                product.setCategories(getCategories(product));
+                list.add(product);
+            }
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, resultSet);
+        }
+
+        return list;
     }
 
     private long saveCategory(String category) {

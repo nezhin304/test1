@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
 
@@ -58,5 +60,35 @@ public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
         }
 
         return id;
+    }
+
+    @Override
+    public Collection getAll() {
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Collection customers = new ArrayList<Customer>();
+
+        try (Connection connection = getConnection()) {
+
+            statement = connection.prepareStatement("SELECT * FROM customers");
+            resultSet = statement.executeQuery();
+            connection.commit();
+
+            while (resultSet.next()) {
+
+                Customer customer = new Customer();
+                customer.setName(resultSet.getString(2));
+                ((ArrayList) customers).add(customer);
+            }
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+
+            Helper.closeStatementResultSet(statement, resultSet);
+        }
+
+        return customers;
     }
 }

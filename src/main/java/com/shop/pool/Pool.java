@@ -19,6 +19,8 @@ public class Pool implements AutoCloseable {
 
     private Pool() {
 
+
+
         Properties properties = new Properties();
         try {
             InputStream inputStream = new FileInputStream("./src/main/resources/META-INF/property.config");
