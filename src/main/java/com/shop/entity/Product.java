@@ -1,7 +1,7 @@
 package com.shop.entity;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class Product {
 
@@ -9,7 +9,7 @@ public class Product {
 
     private String code;
 
-    private List<String> categories = new ArrayList<>();
+    private Collection categories = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -27,11 +27,11 @@ public class Product {
         this.code = code;
     }
 
-    public List<String> getCategories() {
+    public Collection getCategories() {
         return categories;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(Collection categories) {
         this.categories = categories;
     }
 

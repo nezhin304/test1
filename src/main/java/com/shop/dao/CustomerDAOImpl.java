@@ -1,7 +1,6 @@
 package com.shop.dao;
 
 import com.shop.entity.Customer;
-import com.shop.pool.Pool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,16 +9,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CustomerDAOImpl implements CustomerDAO {
+public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
 
-    Logger logger = LoggerFactory.getLogger(CustomerDAOImpl.class);
+    private Logger logger = LoggerFactory.getLogger(CustomerDAOImpl.class);
 
     @Override
     public void create(Customer customer) {
 
         PreparedStatement statement = null;
 
-        try (Connection connection = Pool.getConnection()) {
+        try (Connection connection = getConnection()) {
 
             statement = connection.prepareStatement("INSERT INTO customers (name) VALUES (?)");
             statement.setString(1, customer.getName());
@@ -41,7 +40,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         ResultSet resultSet = null;
         long id = 0;
 
-        try (Connection connection = Pool.getConnection()) {
+        try (Connection connection = getConnection()) {
 
             statement = connection.prepareStatement("SELECT customer_id FROM customers WHERE name = ?");
             statement.setString(1, customer.getName());

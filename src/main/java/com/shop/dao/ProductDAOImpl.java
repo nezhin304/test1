@@ -8,18 +8,18 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.List;
 
-public class ProductDAOImpl implements ProductDAO {
+public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 
-    Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
+    private Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
 
     @Override
     public void save(Product product) {
 
         PreparedStatement statement = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         long productId = 0;
 
-        try (Connection connection = Pool.getConnection()) {
+        try (Connection connection = getConnection()) {
 
             statement = connection.
                     prepareStatement("INSERT INTO products (name, code) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -84,7 +84,7 @@ public class ProductDAOImpl implements ProductDAO {
         ResultSet resultSet = null;
         long categoryId = 0;
 
-        try (Connection connection = Pool.getConnection()) {
+        try (Connection connection = getConnection()) {
 
             statement = connection.prepareStatement("INSERT INTO categories (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, category);
@@ -116,7 +116,7 @@ public class ProductDAOImpl implements ProductDAO {
         ResultSet resultSet = null;
         long categoryId = 0;
 
-        try (Connection connection = Pool.getConnection()) {
+        try (Connection connection = getConnection()) {
 
             statement = connection.
                     prepareStatement("SELECT MAX(category_id) FROM categories WHERE name = ?");

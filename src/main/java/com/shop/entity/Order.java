@@ -1,14 +1,13 @@
 package com.shop.entity;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class Order {
 
     private Customer customer;
 
-    private List<Product> products = new ArrayList<>();
-
+    private Collection products = new ArrayList<>();
 
     public Customer getCustomer() {
         return customer;
@@ -18,11 +17,11 @@ public class Order {
         this.customer = customer;
     }
 
-    public List<Product> getProducts() {
+    public Collection getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Collection products) {
         this.products = products;
     }
 

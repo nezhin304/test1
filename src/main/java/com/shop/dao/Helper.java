@@ -7,9 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Helper {
+ class Helper {
 
-    static Logger logger = LoggerFactory.getLogger(Helper.class);
+    private static Logger logger = LoggerFactory.getLogger(Helper.class);
 
     static void closeStatementResultSet(PreparedStatement statement, ResultSet resultSet) {
         try {

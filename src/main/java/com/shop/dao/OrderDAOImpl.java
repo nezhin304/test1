@@ -2,7 +2,6 @@ package com.shop.dao;
 
 import com.shop.entity.Order;
 import com.shop.entity.Product;
-import com.shop.pool.Pool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,9 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class OrderDAOImpl implements OrderDAO {
+public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
 
-    Logger logger = LoggerFactory.getLogger(OrderDAO.class);
+    private Logger logger = LoggerFactory.getLogger(OrderDAO.class);
 
     @Override
     public void create(Order order) {
@@ -22,7 +21,7 @@ public class OrderDAOImpl implements OrderDAO {
 
         PreparedStatement statement = null;
 
-        try (Connection connection = Pool.getConnection()) {
+        try (Connection connection = getConnection()) {
 
             for (Product product : order.getProducts()) {
 
