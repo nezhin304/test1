@@ -52,7 +52,6 @@ public class ProductDAOImplTest {
 
         assertEquals("ball", productRes.getName());
         assertEquals("0000005", productRes.getCode());
-        assertEquals("0000005", productRes.getCode());
 
         List<String> cat = (List<String>) productRes.getCategories();
 
