@@ -18,6 +18,8 @@ public class ProductDAOImplTest {
     @Test
     public void insertAndSelectEntityTest() {
 
+        //test newbranch   dfsdfsdfsdfsdfsdfsd
+
         CustomerDAO customerDAO = CustomerDAOInstance.getInstance();
         OrderDAO orderDAO = OrderDAOInstance.getInstance();
         ProductDAO productDAO = ProductDAOInstance.getInstance();
@@ -83,6 +85,7 @@ public class ProductDAOImplTest {
                 .get();
         assertEquals("ball", prodRes.getName());
         assertEquals("0000005", prodRes.getCode());
+
 
     }
 }
