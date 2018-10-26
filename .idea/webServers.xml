@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ed0fe7c2-c2b7-4426-b260-72824c610510" name="local_git_repositories" url="http://localhost">
+        <fileTransfer port="0" mountedRoot="C:\Users\akuzmenko\IdeaProjects\local_git_repositories" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>
