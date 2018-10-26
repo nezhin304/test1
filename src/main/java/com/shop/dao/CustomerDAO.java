@@ -10,6 +10,8 @@ public interface CustomerDAO {
 
     long getId (Customer customer);
 
+    void deleteAll();
+
     Customer getCustomerById(long id);
 
     Collection<Customer> getAll();

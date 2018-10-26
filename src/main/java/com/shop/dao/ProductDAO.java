@@ -12,12 +12,18 @@ public interface ProductDAO {
 
     void delete(Product product);
 
+    void deleteAll();
+
     Product getByCode(String code);
 
     Collection getByCategory(String category);
 
     Collection getCategories(Product product);
 
+    long getId(Product product);
+
     Collection getAll();
+
+
 
 }

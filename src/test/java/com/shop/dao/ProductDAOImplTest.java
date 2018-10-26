@@ -22,6 +22,10 @@ public class ProductDAOImplTest {
         OrderDAO orderDAO = OrderDAOInstance.getInstance();
         ProductDAO productDAO = ProductDAOInstance.getInstance();
 
+        productDAO.deleteAll();
+        orderDAO.deleteAll();
+        customerDAO.deleteAll();
+
         Product product = new Product();
         product.setName("ball");
         product.setCode("0000005");
@@ -37,50 +41,48 @@ public class ProductDAOImplTest {
         order.setCustomer(customer);
         orderDAO.create(order);
 
-        orderDAO.deleteAll();
+        Collection<Product> products = productDAO.getAll();
 
-//        Collection<Product> products = productDAO.getAll();
-//
-//        Product productRes = products.stream()
-//                .filter(p -> p.getName().equals("ball"))
-//                .findFirst()
-//                .get();
-//
-//        assertEquals("ball", productRes.getName());
-//        assertEquals("0000005", productRes.getCode());
-//
-//
-//        Collection<String> cat = productRes.getCategories();
-//
-//        assertTrue(cat.contains("default"));
-//
-//
-//        Collection<Customer> customers = customerDAO.getAll();
-//
-//        Customer customerRes = customers.stream()
-//                .filter(c -> c.getName().equals("User"))
-//                .findFirst()
-//                .get();
-//
-//        assertEquals("User", customerRes.getName());
-//
-//
-//        Collection<Order> orders = orderDAO.getAll();
-//
-//        Order orderRes = orders.stream()
-//                .filter(o -> o.getCustomer().getName().equals("User"))
-//                .findFirst()
-//                .get();
-//        assertEquals("User", orderRes.getCustomer().getName());
-//
-//        Collection<Product> prodInOrder = orderRes.getProducts();
-//
-//        Product prodRes = prodInOrder.stream()
-//                .filter(p -> p.getName().equals("ball"))
-//                .findFirst()
-//                .get();
-//        assertEquals("ball", prodRes.getName());
-//        assertEquals("0000005", prodRes.getCode());
+        Product productRes = products.stream()
+                .filter(p -> p.getName().equals("ball"))
+                .findFirst()
+                .get();
+
+        assertEquals("ball", productRes.getName());
+        assertEquals("0000005", productRes.getCode());
+
+
+        Collection<String> cat = productRes.getCategories();
+
+        assertTrue(cat.contains("default"));
+
+
+        Collection<Customer> customers = customerDAO.getAll();
+
+        Customer customerRes = customers.stream()
+                .filter(c -> c.getName().equals("User"))
+                .findFirst()
+                .get();
+
+        assertEquals("User", customerRes.getName());
+
+
+        Collection<Order> orders = orderDAO.getAll();
+
+        Order orderRes = orders.stream()
+                .filter(o -> o.getCustomer().getName().equals("User"))
+                .findFirst()
+                .get();
+        assertEquals("User", orderRes.getCustomer().getName());
+
+        Collection<Product> prodInOrder = orderRes.getProducts();
+
+        Product prodRes = prodInOrder.stream()
+                .filter(p -> p.getName().equals("ball"))
+                .findFirst()
+                .get();
+        assertEquals("ball", prodRes.getName());
+        assertEquals("0000005", prodRes.getCode());
 
     }
 }

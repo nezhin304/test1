@@ -1,6 +1,7 @@
 package com.shop.dao;
 
 import com.shop.entity.Product;
+import com.shop.instance.ProductDAOInstance;
 import com.shop.pool.Pool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 
         PreparedStatement statement = null;
         ResultSet resultSet;
-        Collection categories =  product.getCategories();
+        Collection categories = product.getCategories();
         long productId = 0;
 
         try (Connection connection = getConnection()) {
@@ -67,6 +68,46 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
     }
 
     @Override
+    public void deleteAll() {
+
+        ProductDAO productDAO = ProductDAOInstance.getInstance();
+        Collection<Product> products = productDAO.getAll();
+
+        for (Product product : products) {
+
+            PreparedStatement statement = null;
+
+            try (Connection connection = getConnection()) {
+
+                statement = connection.prepareStatement("DELETE FROM products_categories WHERE product_id = ?");
+                statement.setLong(1, productDAO.getId(product));
+                statement.execute();
+                connection.commit();
+
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            } finally {
+                Helper.closeStatementResultSet(statement, null);
+            }
+        }
+
+
+        PreparedStatement statement = null;
+
+        try (Connection connection = getConnection()) {
+
+            statement = connection.prepareStatement("DELETE FROM products");
+            statement.execute();
+            connection.commit();
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, null);
+        }
+    }
+
+    @Override
     public Product getByCode(String code) {
 
         PreparedStatement statement = null;
@@ -92,7 +133,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
             Helper.closeStatementResultSet(statement, resultSet);
         }
 
-    return product;
+        return product;
 
     }
 
@@ -108,13 +149,13 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
         ResultSet resultSet = null;
         Collection list = new ArrayList<String>();
 
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
 
             statement = connection.prepareStatement("select name from categories where category_id = (select category_id from products_categories where product_id = (select product_id from products where name = ?));");
             statement.setString(1, product.getName());
             resultSet = statement.executeQuery();
             connection.commit();
-            while (resultSet.next()){
+            while (resultSet.next()) {
 
                 list.add(resultSet.getString(1));
 
@@ -130,6 +171,32 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
     }
 
     @Override
+    public long getId(Product product) {
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        long productId = 0;
+
+        try (Connection connection = getConnection()) {
+
+            statement = connection.prepareStatement("SELECT product_id FROM products WHERE name = ? AND code = ?");
+            statement.setString(1, product.getName());
+            statement.setString(2, product.getCode());
+            resultSet = statement.executeQuery();
+            connection.commit();
+            resultSet.next();
+            productId = resultSet.getLong(1);
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, resultSet);
+        }
+
+        return productId;
+    }
+
+    @Override
     public Collection getAll() {
 
         PreparedStatement statement = null;
@@ -137,13 +204,13 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
         ResultSet resultSet = null;
 
 
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
 
             statement = connection.prepareStatement("SELECT p.*, c.* FROM products p JOIN products_categories p_c ON p.product_id = p_c.product_id \n" +
                     "JOIN categories c ON c.category_id = p_c.category_id");
             resultSet = statement.executeQuery();
             connection.commit();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 Product product = new Product();
                 product.setName(resultSet.getString(2));
                 product.setCode(resultSet.getString(3));

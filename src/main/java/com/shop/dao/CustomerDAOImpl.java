@@ -1,6 +1,7 @@
 package com.shop.dao;
 
 import com.shop.entity.Customer;
+import com.shop.instance.OrderDAOInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,13 +64,31 @@ public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
     }
 
     @Override
+    public void deleteAll() {
+
+        PreparedStatement statement = null;
+
+        try (Connection connection = getConnection()) {
+
+            statement = connection.prepareStatement("DELETE FROM customers");
+            statement.execute();
+            connection.commit();
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, null);
+        }
+    }
+
+    @Override
     public Customer getCustomerById(long id) {
 
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         Customer customer = new Customer();
 
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
 
             statement = connection.prepareStatement("SELECT name FROM customers WHERE customer_id = ?");
             statement.setLong(1, id);
