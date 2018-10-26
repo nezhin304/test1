@@ -1,7 +1,6 @@
 package com.shop.dao;
 
 import com.shop.entity.Customer;
-import com.shop.instance.OrderDAOInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

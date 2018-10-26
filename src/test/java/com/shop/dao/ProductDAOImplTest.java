@@ -84,5 +84,6 @@ public class ProductDAOImplTest {
         assertEquals("ball", prodRes.getName());
         assertEquals("0000005", prodRes.getCode());
 
+
     }
 }
