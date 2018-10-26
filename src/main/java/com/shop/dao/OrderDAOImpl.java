@@ -56,7 +56,7 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
         CustomerDAO customerDAO = CustomerDAOInstance.getInstance();
         ProductDAO productDAO = ProductDAOInstance.getInstance();
 
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
 
             statement = connection.prepareStatement("SELECT * FROM orders");
             resultSet = statement.executeQuery();
@@ -77,5 +77,50 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
         }
 
         return orders;
+    }
+
+    @Override
+    public void deleteOrder(Order order) {
+
+        PreparedStatement statement = null;
+        CustomerDAO customerDAO = CustomerDAOInstance.getInstance();
+        long customerId = customerDAO.getId(order.getCustomer());
+
+        for (Product product : (Collection<Product>) order.getProducts()) {
+
+            try (Connection connection = getConnection()) {
+
+                statement = connection.prepareStatement("DELETE FROM orders WHERE customer_id = ? AND product_code = ?");
+                statement.setLong(1, customerId);
+                statement.setString(2, product.getCode());
+                statement.execute();
+                connection.commit();
+
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            } finally {
+                Helper.closeStatementResultSet(statement, null);
+            }
+        }
+    }
+
+    @Override
+    public void deleteAll() {
+
+        PreparedStatement statement = null;
+
+        try (Connection connection = getConnection()) {
+
+            statement = connection.prepareStatement("DELETE FROM orders ");
+            statement.execute();
+            connection.commit();
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, null);
+        }
+
+
     }
 }

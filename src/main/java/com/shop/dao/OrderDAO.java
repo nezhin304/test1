@@ -9,4 +9,8 @@ public interface OrderDAO {
     void create(Order order);
 
     Collection getAll();
+
+    void deleteOrder(Order order);
+
+    void deleteAll();
 }
