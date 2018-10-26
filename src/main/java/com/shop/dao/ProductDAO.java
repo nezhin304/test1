@@ -2,6 +2,7 @@ package com.shop.dao;
 
 import com.shop.entity.Product;
 
+import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface ProductDAO {
 
     void delete(Product product);
 
-    long getById(long id);
+    Product getByCode(String code);
 
     Collection getByCategory(String category);
 

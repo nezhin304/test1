@@ -1,14 +1,19 @@
 package com.shop.dao;
 
+import com.shop.entity.Customer;
 import com.shop.entity.Order;
 import com.shop.entity.Product;
+import com.shop.instance.CustomerDAOInstance;
+import com.shop.instance.ProductDAOInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
 
@@ -40,5 +45,37 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
 
             Helper.closeStatementResultSet(statement, null);
         }
+    }
+
+    @Override
+    public Collection getAll() {
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Collection orders = new ArrayList();
+        CustomerDAO customerDAO = CustomerDAOInstance.getInstance();
+        ProductDAO productDAO = ProductDAOInstance.getInstance();
+
+        try (Connection connection = getConnection()){
+
+            statement = connection.prepareStatement("SELECT * FROM orders");
+            resultSet = statement.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+
+                Customer customer = customerDAO.getCustomerById(resultSet.getLong(2));
+                Order order = new Order();
+                order.setCustomer(customer);
+                order.setProducts(productDAO.getByCode(resultSet.getString(3)));
+                ((ArrayList) orders).add(order);
+            }
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, resultSet);
+        }
+
+        return orders;
     }
 }

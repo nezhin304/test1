@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
@@ -42,9 +43,9 @@ public class ProductDAOImplTest {
         order.setCustomer(customer);
         orderDAO.create(order);
 
-        Collection products = productDAO.getAll();
+        Collection<Product> products = productDAO.getAll();
 
-        Product productRes = ((ArrayList<Product>)products).stream()
+        Product productRes = products.stream()
                 .filter(p -> p.getName().equals("ball"))
                 .findFirst()
                 .get();
@@ -53,19 +54,41 @@ public class ProductDAOImplTest {
         assertEquals("0000005", productRes.getCode());
 
 
-        Collection cat = productRes.getCategories();
+        Collection<String> cat = productRes.getCategories();
 
         assertTrue(cat.contains("default"));
 
 
-        Collection customers = customerDAO.getAll();
+        Collection<Customer> customers = customerDAO.getAll();
 
-        Customer customerRes = ((ArrayList<Customer>)customers).stream()
+        Customer customerRes = customers.stream()
                 .filter(c -> c.getName().equals("User"))
                 .findFirst()
                 .get();
 
         assertEquals("User", customerRes.getName());
+
+
+        Collection<Order> orders = orderDAO.getAll();
+
+        Order orderRes = orders.stream()
+                .filter(o -> o.getCustomer().getName().equals("User"))
+                .findFirst()
+                .get();
+        assertEquals("User", orderRes.getCustomer().getName());
+
+        Collection<Product> prodInOrder = orderRes.getProducts();
+
+        Product prodRes = prodInOrder.stream()
+                .filter(p -> p.getName().equals("ball"))
+                .findFirst()
+                .get();
+        assertEquals("ball", prodRes.getName());
+        assertEquals("0000005", prodRes.getCode());
+
+
+
+
 
     }
 }

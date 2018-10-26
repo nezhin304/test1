@@ -67,8 +67,33 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
     }
 
     @Override
-    public long getById(long id) {
-        return 0;
+    public Product getByCode(String code) {
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Product product = null;
+
+        try (Connection connection = getConnection()) {
+
+            statement = connection.prepareStatement("SELECT name FROM products WHERE code = ?");
+            statement.setString(1, code);
+            resultSet = statement.executeQuery();
+            connection.commit();
+            resultSet.next();
+
+            product = new Product();
+            product.setName(resultSet.getString(1));
+            product.setCode(code);
+            product.setCategories(getCategories(product));
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, resultSet);
+        }
+
+    return product;
+
     }
 
     @Override

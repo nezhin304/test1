@@ -63,7 +63,33 @@ public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
     }
 
     @Override
-    public Collection<Customer> getAll() {
+    public Customer getCustomerById(long id) {
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Customer customer = new Customer();
+
+        try (Connection connection = getConnection()){
+
+            statement = connection.prepareStatement("SELECT name FROM customers WHERE customer_id = ?");
+            statement.setLong(1, id);
+            resultSet = statement.executeQuery();
+            connection.commit();
+
+            resultSet.next();
+            customer.setName(resultSet.getString(1));
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        } finally {
+            Helper.closeStatementResultSet(statement, resultSet);
+        }
+
+        return customer;
+    }
+
+    @Override
+    public Collection getAll() {
 
         PreparedStatement statement = null;
         ResultSet resultSet = null;
